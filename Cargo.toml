@@ -9,7 +9,7 @@ name = "hello_world"
 path = "src/leetcode/hello_world/main.rs"
 
 [[bin]]
-name = "matrix_rotation"
-path = "src/leetcode/matrix_rotation/main.rs"
+name = "rotate_image"
+path = "src/leetcode/rotate_image/main.rs"
 
 [dependencies]
