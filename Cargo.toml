@@ -6,10 +6,14 @@ edition = "2018"
 
 [[bin]]
 name = "hello_world"
-path = "src/leetcode/hello_world/main.rs"
+path = "src/leetcode/hello_world.rs"
 
 [[bin]]
 name = "rotate_image"
-path = "src/leetcode/rotate_image/main.rs"
+path = "src/leetcode/rotate_image.rs"
+
+[[bin]]
+name = "ds_binary_tree"
+path = "src/ds/binary_tree.rs"
 
 [dependencies]
