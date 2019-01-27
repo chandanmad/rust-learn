@@ -1,6 +1,8 @@
 use std::collections::LinkedList;
 use std::rc::Rc;
 use std::cell::{RefCell, Cell};
+use std::mem;
+use std::marker::PhantomData;
 
 struct TreeNode<T> {
     data: T,
@@ -16,25 +18,34 @@ impl<T> TreeNode<T> {
             right: None
         }
     }
-
 }
 
 impl<T> TreeNode<T> {
-    fn leftIter(&self) -> LeftIterator<T> {
-        LeftIterator{root: Some(&self)}
+    fn left_iter(&self) -> LeftIterator<T> {
+        LeftIterator::new(self.left.clone())
     }
 }
 
-struct LeftIterator<'a, T> {
-    root: Option<&'a TreeNode<T>>
+struct LeftIterator<T> {
+    root: Option<Rc<RefCell<TreeNode<T>>>>
 }
 
+impl<T> LeftIterator<T> {
+    fn new(root: Option<Rc<RefCell<TreeNode<T>>>>) -> Self {
+        LeftIterator{root: root}
+    }
+}
 
+impl<T> Iterator for LeftIterator<T> {
+    type Item = Rc<RefCell<TreeNode<T>>>;
 
-impl<'a, T> Iterator for LeftIterator<'a, T> {
-    type Item = &'a TreeNode<T>;
-
-    fn next(&mut self) -> Option<&'a TreeNode<T>> {
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.root.is_some() {
+            let current: Option<Rc<RefCell<TreeNode<T>>>> = self.root.clone();
+            let left: Option<Rc<RefCell<TreeNode<T>>>> = self.root.clone().unwrap().borrow().left.clone();
+            self.root = left;
+            return current;
+        }
         None
     }
 }
@@ -54,10 +65,6 @@ impl<'a, T> Iterator for InorderState<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<&'a T> {
-        while let Some(ref current) = self.root.leftIter().next() {
-            self.stack.push_front(current);
-            unimplemented!();
-        }
         None
     } 
 }
